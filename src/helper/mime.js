@@ -3,7 +3,7 @@ const path = require('path');
 const mimeLists = {
   css: 'text/css',
   html: 'text/html',
-  js: 'text/javascripte',
+  js: 'text/javascript',
   xml: 'text/xml',
   gif: 'image/gif',
   jpg: 'image/jpeg',

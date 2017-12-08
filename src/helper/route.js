@@ -3,7 +3,7 @@ const path = require('path');
 const {promisify} = require('util');
 const stat = promisify(fs.stat);
 const readdir = promisify(fs.readdir);
-const {root} = require('../config/defaultConfig');
+const {root, compressType} = require('../config/defaultConfig');
 /*引入 handlebars*/
 const Handlebars = require('handlebars');
 /*模板页面的路径*/
@@ -13,6 +13,7 @@ const source = fs.readFileSync(tplPath, 'utf8');
 /*用 handlebars 的 compile 方法来编译模板*/
 const template = Handlebars.compile(source);
 const mimeType = require('./mime.js');
+const compress = require('./compress');
 
 async function route(req, res) {
   /*获取用户的访问的 url*/
@@ -33,7 +34,7 @@ async function route(req, res) {
           files: files.map(file => {
             return {
               file,
-              icon: mimeType(filePath)
+              icon: mimeType(file)
             };
           })   /*files 是一个数组，为文件列表*/
         };
@@ -52,10 +53,16 @@ async function route(req, res) {
     if (stats.isFile()) {
       /*如果是文件，则返回文件内容*/
       let contentType = mimeType(filePath);
-      res.writeHead(200, 'file', {
-        'Content-Type': `${contentType}; charset=utf8`
-      });
-      fs.createReadStream(filePath).pipe(res);
+      // res.writeHead(200, 'file', {
+      //   'Content-Type': `${contentType}; charset=utf8`
+      // });
+      res.statusCode = 200;
+      res.setHeader('Content-Type', `${contentType}; charset=utf8`);
+      let rs = fs.createReadStream(filePath);
+      if (filePath.match(compressType)) {
+        rs = compress(rs, req, res);
+      }
+      rs.pipe(res);
     }
 
   }
