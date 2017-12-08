@@ -12,6 +12,7 @@ const tplPath = path.join(__dirname, '../template/dir.hbs');
 const source = fs.readFileSync(tplPath, 'utf8');
 /*用 handlebars 的 compile 方法来编译模板*/
 const template = Handlebars.compile(source);
+const mimeType = require('./mime.js');
 
 async function route(req, res) {
   /*获取用户的访问的 url*/
@@ -45,8 +46,9 @@ async function route(req, res) {
     }
     if (stats.isFile()) {
       /*如果是文件，则返回文件内容*/
+      let contentType = mimeType(filePath)
       res.writeHead(200, 'file', {
-        'Content-Type': 'text/plain; charset=utf8'
+        'Content-Type': `${contentType}; charset=utf8`
       });
       fs.createReadStream(filePath).pipe(res);
     }
