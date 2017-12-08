@@ -30,7 +30,12 @@ async function route(req, res) {
         let data = {
           title: path.basename(filePath), /*title 为文件名*/
           dir: dir ? `/${dir}` : '', /*title 为文件所在的文件夹路径*/
-          files   /*files 是一个数组，为文件列表*/
+          files: files.map(file => {
+            return {
+              file,
+              icon: mimeType(filePath)
+            };
+          })   /*files 是一个数组，为文件列表*/
         };
 
         res.writeHead(200, 'directory', {
