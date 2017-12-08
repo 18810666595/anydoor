@@ -46,7 +46,7 @@ async function route(req, res) {
     }
     if (stats.isFile()) {
       /*如果是文件，则返回文件内容*/
-      let contentType = mimeType(filePath)
+      let contentType = mimeType(filePath);
       res.writeHead(200, 'file', {
         'Content-Type': `${contentType}; charset=utf8`
       });
