@@ -14,6 +14,7 @@ const source = fs.readFileSync(tplPath, 'utf8');
 const template = Handlebars.compile(source);
 const mimeType = require('./mime.js');
 const compress = require('./compress');
+const range = require('./range');
 
 async function route(req, res) {
   /*获取用户的访问的 url*/
@@ -56,9 +57,20 @@ async function route(req, res) {
       // res.writeHead(200, 'file', {
       //   'Content-Type': `${contentType}; charset=utf8`
       // });
-      res.statusCode = 200;
       res.setHeader('Content-Type', `${contentType}; charset=utf8`);
-      let rs = fs.createReadStream(filePath);
+      // let rs = fs.createReadStream(filePath);
+      let rs;
+      const {code, start, end} = range(stats.size, req, res);
+      if (code === 200) {
+        res.statusCode = 200;
+        rs = fs.createReadStream(filePath);
+      } else {
+        res.statusCode = 206;
+        rs = fs.createReadStream(filePath, {
+          start,
+          end
+        });
+      }
       if (filePath.match(compressType)) {
         rs = compress(rs, req, res);
       }
