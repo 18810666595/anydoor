@@ -63,7 +63,7 @@ async function route(req, res) {
       let rs;
       const {code, start, end} = range(stats.size, req, res);
 
-      /*判断 res 是否新鲜*/
+      /*判断 res 是否新鲜，如果新鲜则返回 304*/
       if (isFresh(stats, req, res)) {
         res.statusCode = 304;
         res.end();
