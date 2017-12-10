@@ -15,6 +15,7 @@ const template = Handlebars.compile(source);
 const mimeType = require('./mime.js');
 const compress = require('./compress');
 const range = require('./range');
+const isFresh = require('./cache');
 
 async function route(req, res) {
   /*获取用户的访问的 url*/
@@ -61,6 +62,14 @@ async function route(req, res) {
       // let rs = fs.createReadStream(filePath);
       let rs;
       const {code, start, end} = range(stats.size, req, res);
+
+      /*判断 res 是否新鲜*/
+      if (isFresh(stats, req, res)) {
+        res.statusCode = 304;
+        res.end();
+        return;
+      }
+
       if (code === 200) {
         res.statusCode = 200;
         rs = fs.createReadStream(filePath);
