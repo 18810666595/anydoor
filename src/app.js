@@ -3,6 +3,7 @@ const path = require('path');
 const conf = require('./config/defaultConfig');
 const chalk = require('chalk');
 const route = require('./helper/route');
+const openUrl = require('./helper/openUrl');
 
 class Server {
   constructor(config) {
@@ -10,7 +11,7 @@ class Server {
   }
 
   start() {
-    const {root,port,hostname}=this.conf;
+    const {root, port, hostname} = this.conf;
 
     const server = http.createServer((req, res) => {
       /*用根路径与用户访问的 url 拼接成绝对路径*/
@@ -22,6 +23,7 @@ class Server {
     server.listen(port, hostname, () => {
       let url = `http://${hostname}:${port}`;
       console.log(`打开浏览器，访问 ${chalk.green(url)}`);
+      openUrl(url)
     });
 
   }

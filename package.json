@@ -1,8 +1,11 @@
 {
     "name": "anydoor",
-    "version": "1.0.0",
+    "version": "0.1.1",
     "description": "## 使用方法",
     "main": "src/app.js",
+    "bin":{
+        "anydoor": "bin/anydoor.js"
+    },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "fix": "eslint --fix .",
