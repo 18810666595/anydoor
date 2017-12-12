@@ -5,7 +5,7 @@ module.exports = function (url) {
     case 'darwin':  //如果是 mac
       exec(`open ${url}`);
       break;
-    case 'win32':
+    case 'win32':   //如果是 Windows
       exec(`start ${url}`);
       break;
   }

@@ -1,9 +1,9 @@
 {
     "name": "anydoor-cg",
-    "version": "0.1.6",
+    "version": "0.1.11",
     "description": "a node project",
     "main": "src/app.js",
-    "bin":{
+    "bin": {
         "anydoor": "bin/anydoor.js"
     },
     "scripts": {
@@ -23,11 +23,11 @@
     },
     "homepage": "https://github.com/18810666595/anydoor#readme",
     "devDependencies": {
-        "chalk": "^2.3.0",
-        "pre-commit": "^1.2.2",
-        "yargs": "^10.0.3"
+        "pre-commit": "^1.2.2"
     },
     "dependencies": {
-        "handlebars": "^4.0.11"
+        "chalk": "^2.3.0",
+        "handlebars": "^4.0.11",
+        "yargs": "^10.0.3"
     }
 }
