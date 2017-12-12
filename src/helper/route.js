@@ -3,7 +3,6 @@ const path = require('path');
 const {promisify} = require('util');
 const stat = promisify(fs.stat);
 const readdir = promisify(fs.readdir);
-const {root, compressType} = require('../config/defaultConfig');
 /*引入 handlebars*/
 const Handlebars = require('handlebars');
 /*模板页面的路径*/
@@ -17,11 +16,8 @@ const compress = require('./compress');
 const range = require('./range');
 const isFresh = require('./cache');
 
-async function route(req, res) {
-  /*获取用户的访问的 url*/
-  let {url} = req;
-  /*用根路径与用户访问的 url 拼接成绝对路径*/
-  let filePath = path.join(root, url);
+async function route(req, res, filePath, config) {
+
   try {
     const stats = await stat(filePath);
     /*判断是文件还是文件夹*/
@@ -29,7 +25,7 @@ async function route(req, res) {
       /*如果是文件夹，则给出文件列表*/
       try {
         const files = await readdir(filePath);
-        let dir = path.relative(root, filePath);
+        let dir = path.relative(config.root, filePath);
         let data = {
           title: path.basename(filePath), /*title 为文件名*/
           dir: dir ? `/${dir}` : '', /*title 为文件所在的文件夹路径*/
@@ -80,7 +76,7 @@ async function route(req, res) {
           end
         });
       }
-      if (filePath.match(compressType)) {
+      if (filePath.match(config.compressType)) {
         rs = compress(rs, req, res);
       }
       rs.pipe(res);
